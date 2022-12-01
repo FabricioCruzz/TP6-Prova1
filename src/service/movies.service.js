@@ -2,35 +2,35 @@ const myDatabase = []
 
 const getAll = () => myDatabase
 
-const getById = movieId => {
+const getMovieById = movieId => {
     const movieIdx = findElementById(movieId)
     return myDatabase[movieIdx]
 }
 
-const create = element => {
-    myDatabase.push(element)
+const create = movie => {
+    myDatabase.push(movie)
 }
 
-const update = (elementId, element) => {
-    const index = myDatabase.findIndex(e => e.id == elementId)
-    myDatabase[index] = element
+const update = (movieId, movie) => {
+    const index = myDatabase.findIndex(mov => mov.id == movieId)
+    myDatabase[index] = movie
 }
 
-const remove = elementId => {
-    const index = myDatabase.findIndex(e => e.id == elementId)
+const remove = movieId => {
+    const index = myDatabase.findIndex(mov => mov.id == movieId)
     myDatabase.splice(index, 1)
 }
 
-const findElementById = movieId => {
+const findMovieById = movieId => {
     const movieIdx = myDatabase.findIndex(movie => movie.id == movieId)
     return movieIdx
 }
 
 module.exports = {
     getAll,
-    getById,
+    getMovieById,
     create,
     update,
     remove,
-    findElementById
+    findMovieById
 }

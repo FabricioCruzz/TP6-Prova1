@@ -4,53 +4,56 @@ const getAll = (req, res) => {
     res.status(200).send(service.getAll())
 }
 
-const getById = (req, res) => {
-    res.status(200).send(service.getById(req.params.id))
+const getMovieById = (req, res) => {
+    const movie = service.getMovieById(req.params.id)
+    if(movie){
+        res.status(200).send(movie)
+    }
+    else {
+        res.status(204).send('Movie not found')
+    }
 }
 
 const create = (req, res) => {
     const movie = req.body
-    service.create(movie)
-    res.status(201).send('Created')
 
-    // if(isValidBody(res, movie)){
-    // }
+    if(isValidBody(res,movie)){
+        service.create(movie)
+        res.status(201).send('Movie created')
+    }
 }
 
 const update = (req, res) => {
-    const movie = service.getById(req.params.id)
+    const movieId = req.params.id
+    const movie = service.getMovieById(movieId)
     
     service.update(req.params.id, req.body)
     res.status(204).send('No content')
-    // if (movie) {
-    //     if (isValidBody(res, movie)) {
-    //     }
-    // } else {
-    //     res.status(404).send('Movie not found')
-    // }
+    if (movie) {
+        if (isValidBody(res, req.body)) {
+            service.update(movieId, req.body)
+        }
+    } else {
+        res.status(404).send('Movie not found')
+    }
 }
 
 const remove = (req, res) => {
-    service.remove(req.params.id)
-    res.send('Movie removed successfully!')
+    const movieId = req.params.id
+    const movie = service.getMovieById(movieId)
+    if(movie){
+        service.remove(movieId)
+        res.status(204).send('updated')
+    }
+    else{
+        res.status(404).send('Movie not found')
+    }
 }
 
 const isValidBody = (res, movie) => {
     
-    if(!movie.id) {
-        res.status(400).send('Invalid data supplied')
-        return false
-    }
-    else if(!movie.title || movie.title.trim() === ''){
-        res.status(400).send('Invalid data supplied')
-        return false
-    }
-    else if(!movie.description || movie.description.trim() === ''){
-        res.status(400).send('Invalid data supplied')
-        return false
-    }
-    else if(!movie.release_year){
-        res.status(400).send('Invalid data supplied')
+    if(!movie.release_year || !movie.description || !movie.title || !movie.id){
+        res.status(400).send('Invalid data suplied')
         return false
     }
     return true
@@ -58,7 +61,7 @@ const isValidBody = (res, movie) => {
 
 module.exports = {
     getAll,
-    getById,
+    getMovieById,
     create,
     update,
     remove   
